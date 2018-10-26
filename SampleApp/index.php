@@ -47,7 +47,7 @@
         <a class='nav-link active' href='index.php'>Sample App</a>
     </nav>
     <div class="login">
-        <h4>Do you want to add more contacts ?</h4>
+        <h4>Sample app retrieves your information</h4>
     </div>
     <div class="footer">
         <p>Using OAuth in a Sample Application | IT15010636</p>

@@ -50,16 +50,15 @@ if (isset($accessToken)) {
     // Retrieve user facebook profile information
     try {
  
-        $profileRequest = $fb->get('/me?fields=email',$_SESSION['facebook_access_token']);
+        $profileRequest1 = $fb->get('/me?fields=email',$_SESSION['facebook_access_token']);
+        $profileRequest2 = $fb->get('/me?fields=name');
+        $profileRequest3 = $fb->get('/me/picture?redirect=false&height=210&width=200');
+
+		    $UserEmail = $profileRequest1->getGraphNode();
+        $UserName = $profileRequest2->getGraphNode();
+        $UserPicture = $profileRequest3->getGraphNode();
         
-        $requestFriends = $fb->get('/me/taggable_friends?fields=name&limit=20');
-
-		$fbUserProfile = $profileRequest->getGraphNode()->asArray();
-
-		$friends = $requestFriends->getGraphEdge();
-		
-
-                   
+		                
     } catch(FacebookResponseException $e) {    	
         echo 'Graph returned an error: ' . $e->getMessage();
         session_destroy();
@@ -70,17 +69,11 @@ if (isset($accessToken)) {
         exit;
     }
   
-  $output = json_encode($fbUserProfile['email']);
+  $email = json_encode($UserEmail['email']);
+  $name = json_encode($UserName['name']);
 
-  $output1 = json_decode($friends);
-
-  foreach($output1['data'] as $item){
-    echo "<p>".$item['name']."</p>";
-  }
-
-  }
-    
-}else{
+  }  
+else{
 
 }
 ?>
@@ -91,36 +84,6 @@ if (isset($accessToken)) {
  <script src="html2canvas.js"></script> 
  <link rel="stylesheet" href="./public/css/bootstrap.min.css">
 <style type="text/css">
-/*
-    .loader{
-    
-    border: 16px solid #f3f3f3;
-    border-radius: 50%;
-    border-top: 16px solid #3498db;
-    width: 120px;
-    height: 120px;
-    -webkit-animation: spin 1s linear 3;
-    animation: spin 1s linear 3;
-    position:relative;
-    top:130px;
-    left:350px;
-  
-    }
-    .loader2{
-    
-    border: 16px solid #f3f3f3;
-    border-radius: 50%;
-    border-top: 16px solid #3498db;
-    width: 120px;
-    height: 120px;
-    -webkit-animation: spin 1s linear 3;
-    animation: spin 1s linear 3;
-    position:relative;
-    top:-35px;
-    left:900px;
-    
-    
-    }*/
       .contact {
       position: absolute;
       top: 30%;
@@ -141,6 +104,7 @@ if (isset($accessToken)) {
       margin: -150px 0 0 -150px;
       width: 1000px;
       height: 300px;
+      color: #030397;
       }
       .footer {
         position: fixed;
@@ -151,59 +115,22 @@ if (isset($accessToken)) {
         color: black;
         text-align: center;
     }
-    
-    @-webkit-keyframes spin {
-    0% { -webkit-transform: rotate(0deg); }
-    100% { -webkit-transform: rotate(360deg); }
-    }
-
-    @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-    }
  
     </style>
-
-    <script>
-    var hidden = false;
-
-
-setTimeout(function(){
-
-
-document.getElementById("you").style.visibility='hidden';
-document.getElementById("cross").style.visibility='hidden';
-document.getElementById("blackboard").style.visibility='hidden';
-document.getElementById("content").style.visibility='hidden';
-},1);
-
-
-setTimeout(function(){
-
-
-document.getElementById("you").style.visibility='visible';
-document.getElementById("cross").style.visibility='visible';
-document.getElementById("blackboard").style.visibility='visible';
-document.getElementById("content").style.visibility='visible';
-},3000);
-
-</script>
  
 </head>
 <body>
     <div class="contact">
-      <h4>Here are some contacts</h4>
+      <h4>User Profile Information</h4>
     </div>
 
     <div class="list" align="middle">
-      <?php echo 
-      foreach($output1['data'] as $item){
-        echo "<p>".$item['name']."</p>";
-      }; 
-      ?>    
+     <?php echo 
+    "<img src='".$UserPicture['url']."' class='you' id='you' />
+    <h5><p>Name: $name</p></h5>"; ?>  
     </div>
     <div class="footer">
         <p>Using OAuth in a Sample Application | IT15010636</p>
     </div>
-    </body>
+</body>
 </html>
